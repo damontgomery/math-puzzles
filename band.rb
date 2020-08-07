@@ -1,5 +1,3 @@
-require 'rubygems'
-
 target = 64
 number = 2
 factors = []

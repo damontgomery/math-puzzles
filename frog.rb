@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'histogram/array'
 
 boardSizes = 10..10
