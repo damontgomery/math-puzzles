@@ -7,7 +7,7 @@ spaces = minSpace..maxSpace
 results = {}
 
 spaces.to_a.combination(3).to_a.each do |selectedSpaces|
-  spaceKey = "#{selectedSpaces[0]}:#{selectedSpaces[1]}:#{selectedSpaces[2]}"
+  spaceKey = "#{selectedSpaces[0]},#{selectedSpaces[1]},#{selectedSpaces[2]}"
 
   results[spaceKey] = 0
 
@@ -33,4 +33,12 @@ spaces.to_a.combination(3).to_a.each do |selectedSpaces|
   end
 end
 
-puts results.sort_by { |spaceKey, successCount| -successCount }
+dieCombinations = die.to_a.length**4
+
+puts "Total possible combinations for dice: #{dieCombinations}"
+puts "Target value: Success chance (Success combinations)"
+
+(results.sort_by { |spaceKey, successCount| -successCount }).each do |result|
+  successChance = '%.2f' % ((result[1].to_f / dieCombinations) * 100)
+  puts "#{result[0]}: #{successChance}% (#{result[1]})"
+end
