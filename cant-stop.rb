@@ -8,16 +8,16 @@ numberDiceToCombine = 2
 
 results = {}
 
-spaces.to_a.combination(numberSpacesToSelect).to_a.each do |selectedSpaces|
+spaces.to_a.combination(numberSpacesToSelect) do |selectedSpaces|
   spaceKey = selectedSpaces.join(',')
 
   results[spaceKey] = 0
 
-  die.to_a.repeated_permutation(numberDiceToRoll).to_a.each do |dice| 
+  die.to_a.repeated_permutation(numberDiceToRoll) do |dice| 
     # Calculate combinations
     combinations = []
 
-    dice.combination(numberDiceToCombine).to_a.each do |combinedDice|
+    dice.combination(numberDiceToCombine) do |combinedDice|
       combinations.push(combinedDice.sum)
     end
 
