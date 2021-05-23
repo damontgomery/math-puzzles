@@ -45,7 +45,7 @@ end
 dieCombinations = dieFaces.to_a.length**numberDiceToRoll
 
 puts "Total possible combinations for dice: #{dieCombinations}"
-puts "Target value: Success chance (Success combinations)"
+puts "Target values: Success chance (Success combinations)"
 
 (results.sort_by { |resultKey, successCount| -successCount }).each do |result|
   successChance = '%.2f' % ((result[1].to_f / dieCombinations) * 100)
