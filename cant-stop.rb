@@ -1,7 +1,5 @@
 die = 1..6
-minSpace = 2
-maxSpace = 12
-spaces = minSpace..maxSpace
+spaces = 2..12
 numberSpacesToSelect = 3
 numberDiceToRoll = 4
 numberDiceToCombine = 2
