@@ -4,8 +4,8 @@
 
 # Example: 1,2,3,4 dice rolled, score possibilities [[3,7],[4,6],[5,5]]. If you were shooting for any of 3, 4, 5, 6, or 7, you could keep going. Otherwise you lose progress.
 
-dieFaces = 1..6
-boardSpaces = 2..12
+dieFaces = (1..6).to_a
+boardSpaces = (2..12).to_a
 numberSpacesToSelect = 3
 numberDiceToRoll = 4
 numberDiceToCombine = 2
@@ -14,12 +14,12 @@ numberDiceToCombine = 2
 
 results = {}
 
-boardSpaces.to_a.combination(numberSpacesToSelect) do |selectedSpaces|
+boardSpaces.combination(numberSpacesToSelect) do |selectedSpaces|
   resultKey = selectedSpaces.join(',')
 
   results[resultKey] = 0
 
-  dieFaces.to_a.repeated_permutation(numberDiceToRoll) do |rolledDice| 
+  dieFaces.repeated_permutation(numberDiceToRoll) do |rolledDice| 
     # Calculate combinations
     combinations = []
 
@@ -29,20 +29,12 @@ boardSpaces.to_a.combination(numberSpacesToSelect) do |selectedSpaces|
 
     combinations.uniq!
 
-    # Check if combinations found a match.
-    match = false
-
-    selectedSpaces.each do |selectedSpace|
-      match = true if combinations.include?(selectedSpace)
-    end
-
-    # Record results
-    results[resultKey] += 1 if match
+    results[resultKey] += 1 if (selectedSpaces & combinations).length > 0
   end
 end
 
 # Print results
-dieCombinations = dieFaces.to_a.length**numberDiceToRoll
+dieCombinations = dieFaces.length**numberDiceToRoll
 
 puts "Total possible combinations for dice: #{dieCombinations}"
 puts "Target values: Success chance (Success combinations)"
