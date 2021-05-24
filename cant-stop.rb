@@ -12,35 +12,37 @@ numberDiceToCombine = 2
 
 # The combinations are less than 1 million 6^4 * 12c3, so let's just find exact values rather than simulate.
 
-results = {}
+# Key is selected spaces like "1,2,3", value is number of rolls that are successful rolls.
+successfulRollsForSelectedSpaces = {}
 
 boardSpaces.combination(numberSpacesToSelect) do |selectedSpaces|
-  resultKey = selectedSpaces.join(',')
+  selectedSpacesKey = selectedSpaces.join(',')
 
-  results[resultKey] = 0
+  successfulRollsForSelectedSpaces[selectedSpacesKey] = 0
 
   dieFaces.repeated_permutation(numberDiceToRoll) do |rolledDice| 
-    combinations = rolledDice.combination(numberDiceToCombine).to_a.map do |diceToCombine|
+    rolledSpaces = rolledDice.combination(numberDiceToCombine).to_a.map do |diceToCombine|
       diceToCombine.sum
     end
 
-    combinations.uniq!
+    rolledSpaces.uniq!
 
-    results[resultKey] += 1 if (selectedSpaces & combinations).length > 0
+    successfulRollsForSelectedSpaces[selectedSpacesKey] += 1 if (selectedSpaces & rolledSpaces).length > 0
   end
 end
 
 # Print results
-dieCombinations = dieFaces.length**numberDiceToRoll
+totalPossibleRolls = dieFaces.length**numberDiceToRoll
 
-puts "Total possible combinations for dice: #{dieCombinations}"
-puts "Target values: Success chance (Success combinations)"
+puts "Total possible dice rolls: #{totalPossibleRolls}"
+puts "Target values: Success chance (Success rolls)"
 
-results = results.sort_by do |resultKey, successCount|
-  -successCount
+# Sorted hashes become arrays.
+sortedSuccessfulRollsForSelectedSpaces = successfulRollsForSelectedSpaces.sort_by do |selectedSpacesKey, successfulRolls|
+  -successfulRolls
 end
 
-results.each do |result|
-  successChance = '%.2f' % ((result[1].to_f / dieCombinations) * 100)
-  puts "#{result[0]}: #{successChance}% (#{result[1]})"
+sortedSuccessfulRollsForSelectedSpaces.each do |(selectedSpacesKey, successfulRolls)|
+  successChance = '%.2f' % ((successfulRolls.to_f / totalPossibleRolls) * 100)
+  puts "#{selectedSpacesKey}: #{successChance}% (#{successfulRolls})"
 end
