@@ -20,11 +20,8 @@ boardSpaces.combination(numberSpacesToSelect) do |selectedSpaces|
   results[resultKey] = 0
 
   dieFaces.repeated_permutation(numberDiceToRoll) do |rolledDice| 
-    # Calculate combinations
-    combinations = []
-
-    rolledDice.combination(numberDiceToCombine) do |diceToCombine|
-      combinations.push(diceToCombine.sum)
+    combinations = rolledDice.combination(numberDiceToCombine).to_a.map do |diceToCombine|
+      diceToCombine.sum
     end
 
     combinations.uniq!
@@ -39,7 +36,11 @@ dieCombinations = dieFaces.length**numberDiceToRoll
 puts "Total possible combinations for dice: #{dieCombinations}"
 puts "Target values: Success chance (Success combinations)"
 
-(results.sort_by { |resultKey, successCount| -successCount }).each do |result|
+results = results.sort_by do |resultKey, successCount|
+  -successCount
+end
+
+results.each do |result|
   successChance = '%.2f' % ((result[1].to_f / dieCombinations) * 100)
   puts "#{result[0]}: #{successChance}% (#{result[1]})"
 end
