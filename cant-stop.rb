@@ -4,45 +4,45 @@
 
 # Example: 1,2,3,4 dice rolled, score possibilities [[3,7],[4,6],[5,5]]. If you were shooting for any of 3, 4, 5, 6, or 7, you could keep going. Otherwise you lose progress.
 
-dieFaces = (1..6).to_a
-boardSpaces = (2..12).to_a
-numberSpacesToSelect = 3
-numberDiceToRoll = 4
-numberDiceToCombine = 2
+die_faces = (1..6).to_a
+board_spaces = (2..12).to_a
+number_spaces_to_select = 3
+number_dice_to_roll = 4
+number_dice_to_combine = 2
 
 # The combinations are less than 1 million 6^4 * 12c3, so let's just find exact values rather than simulate.
 
 # Key is selected spaces like "1,2,3", value is number of rolls that are successful rolls.
-successfulRollsForSelectedSpaces = {}
+successful_rolls_for_selected_spaces = {}
 
-boardSpaces.combination(numberSpacesToSelect) do |selectedSpaces|
-  selectedSpacesKey = selectedSpaces.join(',')
+board_spaces.combination(number_spaces_to_select) do |selected_spaces|
+  selected_spaces_key = selected_spaces.join(',')
 
-  successfulRollsForSelectedSpaces[selectedSpacesKey] = 0
+  successful_rolls_for_selected_spaces[selected_spaces_key] = 0
 
-  dieFaces.repeated_permutation(numberDiceToRoll) do |rolledDice| 
-    rolledSpaces = rolledDice.combination(numberDiceToCombine).to_a.map do |diceToCombine|
-      diceToCombine.sum
+  die_faces.repeated_permutation(number_dice_to_roll) do |rolled_dice| 
+    rolled_spaces = rolled_dice.combination(number_dice_to_combine).to_a.map do |dice_to_combine|
+      dice_to_combine.sum
     end
 
-    rolledSpaces.uniq!
+    rolled_spaces.uniq!
 
-    successfulRollsForSelectedSpaces[selectedSpacesKey] += 1 if (selectedSpaces & rolledSpaces).length > 0
+    successful_rolls_for_selected_spaces[selected_spaces_key] += 1 if (selected_spaces & rolled_spaces).any?
   end
 end
 
 # Print results
-totalPossibleRolls = dieFaces.length**numberDiceToRoll
+total_possible_rolls = die_faces.length**number_dice_to_roll
 
-puts "Total possible dice rolls: #{totalPossibleRolls}"
+puts "Total possible dice rolls: #{total_possible_rolls}"
 puts "Target values: Success chance (Success rolls)"
 
 # Sorted hashes become arrays.
-sortedSuccessfulRollsForSelectedSpaces = successfulRollsForSelectedSpaces.sort_by do |selectedSpacesKey, successfulRolls|
-  -successfulRolls
+sorted_successful_rolls_for_selected_spaces = successful_rolls_for_selected_spaces.sort_by do |selected_spaces_key, successful_rolls|
+  -successful_rolls
 end
 
-sortedSuccessfulRollsForSelectedSpaces.each do |(selectedSpacesKey, successfulRolls)|
-  successChance = '%.2f' % ((successfulRolls.to_f / totalPossibleRolls) * 100)
-  puts "#{selectedSpacesKey}: #{successChance}% (#{successfulRolls})"
+sorted_successful_rolls_for_selected_spaces.each do |(selected_spaces_key, successful_rolls)|
+  success_chance = '%.2f' % ((successful_rolls.to_f / total_possible_rolls) * 100)
+  puts "#{selected_spaces_key}: #{success_chance}% (#{successful_rolls})"
 end
